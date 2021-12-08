@@ -1,0 +1,89 @@
+loadkeys de-latin1
+timedatectl set-ntp true
+timedatectl status
+lsblk		[Richtige Disk finden (Bsp. sda)]
+cfdisk
+	->DOS
+	->New
+	->[Größe 1. Partition (Insgesamtspeicher - Swap)]
+	->Primary
+	->Bootable
+	->New
+	->[Übriger Speicher automatisch]
+	->Primary
+	->Type -> Linux Swap (82)
+	->Write
+	->yes
+	->Quit						[Für EFI siehe unten]
+mkfs.ext4 /dev/sda1		[Main-Partition]
+lsblk		[Nocheinmal überprüfen]
+mkswap /dev/sda2		[Swap-Partition]
+swapon /dev/sda2		[Swap-Partition]
+mount /dev/sda1 /mnt		[Main-Partition]
+nano /etc/pacman.d/mirrorlist
+	->Strg-K alle Zeilen, die nicht aus Deutschland sind [Löschen]
+	->Müssen nicht alle Aus Deutschland sein [Einige reichen]
+	->Strg-X -> y
+pacstrap /mnt base base-devel linux linux-firmware nano bash-completion dhcp dhcpcd	[intel-ucode]
+genfstab -U /mnt >> /mnt/etc/fstab
+arch-chroot /mnt
+ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
+hwclock --systohc
+nano /etc/locale.gen
+	->Einkommentieren der Zeilen von de_DE* und en_US*
+nano /etc/locale.conf
+	->LANG=en_US.UTF-8
+nano /etc/vconsole.conf
+	->KEYMAP=de-latin1
+locale-gen
+nano /etc/hostname
+	->[Hostname]
+nano /etc/hosts
+	->127.0.0.1	localhost
+	->::1		localhost
+	->127.0.1.1	[Hostname].localdomain	[Hostname]
+passwd
+	->Passwort erstellen
+systemctl enable dhcpcd
+useradd -m finn
+passwd finn
+	->Passwort vergeben
+usermod -aG wheel,audio,video,optical,storage finn
+groups finn
+	->Sind alle Gruppen zu sehen?
+pacman -S vim
+visudo
+	->Runter [mit Taste "J" ("K" für hoch)] bis zu: "Uncomment to allow members of group wheel to execute any command"
+	->X [Löscht das "#"]
+	->":wq" eingeben [Schließt den Editor (vim)]
+pacman -S grub			[Siehe unten für reFIND]
+grub-install /dev/sda		[Die Disk von der gestartet werden soll (keine Unterpartition)]
+grub-mkconfig -o /boot/grub/grub.cfg
+exit
+umount /dev/sda1
+shutdown now
+	->[Installationsmedium entfernen]
+	->[Booten]
+	->[login as user]
+ping google.de		[Sicherstellen, dass Internet vorhanden ist]
+sudo pacman -Syu
+sudo pacman -S xorg xorg-server
+sudo pacman -S gnome gnome-extra	[Desktop-Umgebung der Wahl]
+sudo systemctl start gdm.service
+sudo systemctl enable gdm.service
+sudo reboot
+
+
+[FALLS reFIND anstelle von GRUB]
+[Partition:]
+1. Partition Normale		--> mkfs.ext4 /dev/sda1
+2. Partition Efi [ca 500MB]	--> mkfs.msdos -F 32 /dev/sda2
+3. evtl SWAP
+
+pacman -S refind-efi parted python
+refind-install [--usedefault /dev/sda2	[In VM]]
+mkrlconf
+nano /boot/refind_linux.conf
+"Boot using default options"     "root=PARTUUID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX rw add_efi_memmap [initrd=/boot/intel-ucode.img initrd=/boot/amd-ucode.img] initrd=/boot/initramfs-linux.img"
+"Boot using fallback initramfs"  "root=PARTUUID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX rw add_efi_memmap [initrd=/boot/intel-ucode.img initrd=/boot/amd-ucode.img] initrd=/boot/initramfs-linux-fallback.img"
+"Boot to terminal"               "root=PARTUUID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX rw add_efi_memmap [initrd=/boot/intel-ucode.img initrd=/boot/amd-ucode.img] initrd=/boot/initramfs-linux.img systemd.unit=multi-user.target"

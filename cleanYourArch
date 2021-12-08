@@ -1,0 +1,40 @@
+#!/bin/bash
+echo "Starting cleaning process..."
+echo ""
+
+#totalDataSize=0
+
+packageCacheSize="$(du -sh /var/cache/pacman/pkg | cut -f1)"
+echo "Current package cache size: ${packageCacheSize}"
+echo "Clean it now? [y/n]: "
+read ans
+if [ $ans == "y" ]; then
+    sudo pacman -Scc
+fi
+
+echo ""
+
+unusedPackages="$(sudo pacman -Qtdq)"
+if [ ! -z "$unusedPackages" ]; then
+    echo "Currently unused packages: $unusedPackages"
+    echo "Do you want to remove them now? [y/n]: "
+    read ans
+    if [ $ans == "y" ]; then
+        sudo pacman -Rns $(pacman -Qtdq)
+    fi
+    else
+        echo "Currently no unused packages :D"
+fi
+
+echo ""
+homeCacheSize="$(du -sh ~/.cache/ | cut -f1)"
+echo "Current home cache size: ${homeCacheSize}"
+echo "Clean it now? [y/n]: "
+read ans
+if [ $ans == "y" ]; then
+    rm -rf ~/.cache/*
+fi
+
+echo ""
+echo "Finished cleaning data :)"
+#echo "Total cleaned data size: "
