@@ -2,6 +2,7 @@ loadkeys de-latin1
 timedatectl set-ntp true
 timedatectl status
 lsblk		[Richtige Disk finden (Bsp. sda)]
+dd if=/dev/zero of=/dev/[DiskName Bsp. sda] bs=2048	[Komplettes Löschen der Platte]
 cfdisk
 	->DOS
 	->New
