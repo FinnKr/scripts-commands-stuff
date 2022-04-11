@@ -70,7 +70,7 @@ ping google.de		[Sicherstellen, dass Internet vorhanden ist]
 sudo pacman -Syu
 sudo pacman -S xorg xorg-server
 sudo pacman -S gnome gnome-extra	[Desktop-Umgebung der Wahl]
-sudo systemctl start gdm.service
+sudo systemctl start gdm.service	[Je nach Desktop-Umgebung]
 sudo systemctl enable gdm.service
 sudo reboot
 
