@@ -28,13 +28,6 @@ sudo usermod -aG lpadmin "${USERNAME}"
 echo "Restarting CUPS"
 sudo systemctl restart cups
 
-echo "Install driver for Brother hl-5350dn"
-wget https://download.brother.com/welcome/dlf006893/linux-brprinter-installer-2.2.3-1.gz
-gunzip linux-brprinter-installer-2.2.3-1.gz
-sudo su
-echo "Model name: hl-5350dn"
-echo "Follow the instractions, Device-URI: No"
-bash linux-brprinter-installer-2.2.3-1
-
 echo "Configure printer at https://raspberrypi:631"
 echo "--> Add printer"
+echo "Search for PDD-File of printer model"
