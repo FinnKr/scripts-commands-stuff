@@ -5,7 +5,7 @@ timedatectl set-timezone Europe/Berlin
 lsblk		[Richtige Disk finden (Bsp. sda)]
 dd if=/dev/zero of=/dev/[DiskName Bsp. sda] bs=2048	[Komplettes Löschen der Platte]
 cfdisk
-	->GPT
+	->GPT	[Für nicht EFI: DOS]
 	->New
 	->[Größe 1. Partition (Insgesamtspeicher - Swap)]
 	->Primary
