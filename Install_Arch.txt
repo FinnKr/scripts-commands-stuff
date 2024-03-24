@@ -28,9 +28,11 @@ cfdisk
 	->Quit						[Für EFI siehe unten]
 mkfs.ext4 /dev/sda1		[Main-Partition]
 lsblk		[Nocheinmal überprüfen]
+mkfs.fat -F 32 /dev/sdb3	[EFI-Partiion, falls vorhanden]
 mkswap /dev/sda2		[Swap-Partition]
 swapon /dev/sda2		[Swap-Partition]
 mount /dev/sda1 /mnt		[Main-Partition]
+mount --mkdir /dev/efi_system_partition /mnt/boot	[EFI-Partition]
 nano /etc/pacman.d/mirrorlist
 	->Strg-K alle Zeilen, die nicht aus Deutschland sind [Löschen]
 	->Müssen nicht alle Aus Deutschland sein [Einige reichen]
