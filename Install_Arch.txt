@@ -1,9 +1,15 @@
 loadkeys de-latin1
+iwctl	[Wifi-Setup]
+device list -> get interface name
+station <interface-name> scan
+station <interface-name> get-networks
+station <interface-name> connect <SSID>
+exit
 timedatectl set-ntp true
 timedatectl status
 timedatectl set-timezone Europe/Berlin
 lsblk		[Richtige Disk finden (Bsp. sda)]
-dd if=/dev/zero of=/dev/[DiskName Bsp. sda] bs=2048	[Komplettes Löschen der Platte]
+dd if=/dev/zero of=/dev/[DiskName Bsp. sda] bs=2048 status=progress	[Komplettes Löschen der Platte]
 cfdisk
 	->GPT	[Für nicht EFI: DOS]
 	->New
