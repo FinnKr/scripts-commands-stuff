@@ -13,12 +13,15 @@ dd if=/dev/zero of=/dev/[DiskName Bsp. sda] bs=2048 status=progress	[Komplettes 
 cfdisk
 	->GPT	[Für nicht EFI: DOS]
 	->New
-	->[Größe 1. Partition (Insgesamtspeicher - Swap)]
-	->Primary
-	->Bootable
-	->New
+	->[Größe 1. Partition (Insgesamtspeicher - Swap(2GB) - EFI(1GB)]
+	->Primary	[Nicht bei EFI]
+	->Bootable	[Nicht bei EFI]
+	->New			[Nur bei EFI]
+	-> 1GB			[Nur bei EFI]
+	-> Type -> EFI system	[Nur bei EFI]
+	-> New
 	->[Übriger Speicher automatisch]
-	->Primary
+	->Primary	[Nicht bei EFI]
 	->Type -> Linux Swap (82)
 	->Write
 	->yes
