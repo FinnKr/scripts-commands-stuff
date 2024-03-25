@@ -70,10 +70,13 @@ visudo
 	->X [Löscht das "#"]
 	->":wq" eingeben [Schließt den Editor (vim)]
 pacman -S grub			[Siehe unten für reFIND]
-grub-install /dev/sda		[Die Disk von der gestartet werden soll (keine Unterpartition)]
+(old) grub-install /dev/sda		[Die Disk von der gestartet werden soll (keine Unterpartition)]
+pacman -S efibootmgr
+grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB	[EFI]
 grub-mkconfig -o /boot/grub/grub.cfg
 exit
-umount /dev/sda1
+umount /dev/<efi-partition>
+umount /dev/<main-partition>
 shutdown now
 	->[Installationsmedium entfernen]
 	->[Booten]
